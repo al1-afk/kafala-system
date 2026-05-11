@@ -9,6 +9,7 @@ import { Button } from "../components/ui/Button";
 import { Table, THead, TBody, TR, TH, TD } from "../components/ui/Table";
 import { Badge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
+import { PhotoDisplay } from "../components/ui/PhotoUpload";
 import { calculateAge, downloadCSV, formatDate } from "../lib/utils";
 import { toast } from "../components/ui/Toast";
 
@@ -113,8 +114,10 @@ export default function Parents() {
               <TH>رقم الملف</TH>
               <TH>تاريخ التسجيل</TH>
               <TH>الاسم العائلي</TH>
+              <TH>صورة الأب</TH>
               <TH>اسم الأب</TH>
               <TH>تاريخ الوفاة</TH>
+              <TH>صورة الأم</TH>
               <TH>اسم الأرملة</TH>
               <TH>السن</TH>
               <TH>رقم ب.و.ث</TH>
@@ -128,8 +131,14 @@ export default function Parents() {
                 <TD className="font-mono">#{family.numeroDossier}</TD>
                 <TD>{formatDate(family.dateEnregistrement)}</TD>
                 <TD className="font-medium">{family.nomFamille}</TD>
+                <TD>
+                  <PhotoDisplay src={parent?.perePhoto} name={parent?.pereNom} size="sm" />
+                </TD>
                 <TD>{parent?.pereNom || "—"}</TD>
                 <TD>{parent?.pereDateDeces ? formatDate(parent.pereDateDeces) : "—"}</TD>
+                <TD>
+                  <PhotoDisplay src={parent?.merePhoto} name={parent?.mereNom} size="sm" />
+                </TD>
                 <TD>{parent?.mereNom || "—"}</TD>
                 <TD>{parent?.mereDateNaissance ? calculateAge(parent.mereDateNaissance) ?? "—" : "—"}</TD>
                 <TD className="font-mono text-xs">{parent?.mereCin || "—"}</TD>

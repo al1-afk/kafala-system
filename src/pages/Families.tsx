@@ -10,6 +10,7 @@ import { Input, Select } from "../components/ui/Input";
 import { Badge } from "../components/ui/Badge";
 import { Table, THead, TBody, TR, TH, TD } from "../components/ui/Table";
 import { EmptyState } from "../components/ui/EmptyState";
+import { PhotoDisplay } from "../components/ui/PhotoUpload";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { formatDate, downloadCSV } from "../lib/utils";
 import { toast } from "../components/ui/Toast";
@@ -183,7 +184,12 @@ export default function Families() {
                   <TD className="font-mono font-semibold">{f.numeroDossier}</TD>
                   <TD className="text-slate-600 dark:text-slate-400">{formatDate(f.dateEnregistrement)}</TD>
                   <TD className="font-medium">{f.nomFamille}</TD>
-                  <TD>{f.responsable.fullName}</TD>
+                  <TD>
+                    <div className="flex items-center gap-2">
+                      <PhotoDisplay src={f.responsable.photo} name={f.responsable.fullName} size="sm" />
+                      <span>{f.responsable.fullName}</span>
+                    </div>
+                  </TD>
                   <TD className="font-mono text-sm">{f.telephone || "—"}</TD>
                   <TD>
                     <Badge variant="info">{f.natureDossier}</Badge>

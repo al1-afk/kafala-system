@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import {
@@ -33,6 +33,7 @@ import { Table, THead, TBody, TR, TH, TD } from "../components/ui/Table";
 import { Dialog, DialogFooter } from "../components/ui/Dialog";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { EmptyState } from "../components/ui/EmptyState";
+import { PhotoUpload, PhotoDisplay } from "../components/ui/PhotoUpload";
 import { computeFamilyScore } from "../lib/indicators";
 import { calculateAge, formatDate } from "../lib/utils";
 import { toast } from "../components/ui/Toast";
@@ -244,12 +245,19 @@ export default function FamilyDetail() {
               <CardHeader>
                 <CardTitle className="text-base">المكلف بالأسرة</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                <InfoRow icon={<UsersIcon className="w-4 h-4" />} label="الاسم" value={family.responsable.fullName} />
-                <InfoRow label="الصفة" value={family.responsable.natureResponsable || "—"} />
-                <InfoRow icon={<IdCard className="w-4 h-4" />} label="ر.ب.و.ث" value={family.responsable.cin || "—"} />
-                <InfoRow icon={<Phone className="w-4 h-4" />} label="الهاتف" value={family.responsable.phone || "—"} />
-                <InfoRow icon={<MapPin className="w-4 h-4" />} label="العنوان" value={family.responsable.address || "—"} />
+              <CardContent>
+                <div className="flex items-start gap-4 mb-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+                  <PhotoDisplay src={family.responsable.photo} name={family.responsable.fullName} size="md" />
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{family.responsable.fullName}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{family.responsable.natureResponsable || "—"}</p>
+                  </div>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <InfoRow icon={<IdCard className="w-4 h-4" />} label="ر.ب.و.ث" value={family.responsable.cin || "—"} />
+                  <InfoRow icon={<Phone className="w-4 h-4" />} label="الهاتف" value={family.responsable.phone || "—"} />
+                  <InfoRow icon={<MapPin className="w-4 h-4" />} label="العنوان" value={family.responsable.address || "—"} />
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -268,9 +276,10 @@ export default function FamilyDetail() {
                 ) : (
                   <ul className="space-y-2">
                     {fOrphans.map((o) => (
-                      <li key={o.id} className="flex items-center justify-between p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-                        <div>
-                          <p className="font-medium text-sm">{o.prenom} {o.nomFamille}</p>
+                      <li key={o.id} className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                        <PhotoDisplay src={o.photo} name={`${o.prenom} ${o.nomFamille}`} size="sm" />
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm truncate">{o.prenom} {o.nomFamille}</p>
                           <p className="text-xs text-slate-500">
                             {o.sexe} · {calculateAge(o.dateNaissance) ?? "—"} سنة · {o.health}
                           </p>
@@ -310,16 +319,26 @@ export default function FamilyDetail() {
             <CardHeader>
               <CardTitle>المكلف بالأسرة</CardTitle>
             </CardHeader>
-            <CardContent className="grid md:grid-cols-2 gap-4 text-sm">
-              <InfoRow label="الاسم الكامل" value={family.responsable.fullName} />
-              <InfoRow label="طبيعة المكلف" value={family.responsable.natureResponsable || "—"} />
-              <InfoRow label="رقم البطاقة الوطنية" value={family.responsable.cin || "—"} />
-              <InfoRow label="الهاتف" value={family.responsable.phone || "—"} />
-              <div className="md:col-span-2">
-                <InfoRow label="العنوان" value={family.responsable.address || "—"} />
+            <CardContent>
+              <div className="flex flex-col md:flex-row gap-6 items-start">
+                <PhotoDisplay
+                  src={family.responsable.photo}
+                  name={family.responsable.fullName}
+                  size="lg"
+                  shape="square"
+                />
+                <div className="grid md:grid-cols-2 gap-4 text-sm flex-1 w-full">
+                  <InfoRow label="الاسم الكامل" value={family.responsable.fullName} />
+                  <InfoRow label="طبيعة المكلف" value={family.responsable.natureResponsable || "—"} />
+                  <InfoRow label="رقم البطاقة الوطنية" value={family.responsable.cin || "—"} />
+                  <InfoRow label="الهاتف" value={family.responsable.phone || "—"} />
+                  <div className="md:col-span-2">
+                    <InfoRow label="العنوان" value={family.responsable.address || "—"} />
+                  </div>
+                </div>
               </div>
               {editable && (
-                <div className="md:col-span-2 pt-2">
+                <div className="pt-4 mt-4 border-t border-slate-100 dark:border-slate-800">
                   <Link to={`/families/${family.id}/edit`}>
                     <Button variant="outline">
                       <Pencil className="w-4 h-4" />
@@ -356,22 +375,28 @@ export default function FamilyDetail() {
               ) : (
                 fParents.map((p) => (
                   <div key={p.id} className="grid md:grid-cols-2 gap-4 text-sm">
-                    <div className="border-l border-slate-200 dark:border-slate-700 pl-4">
-                      <h4 className="font-semibold mb-2 text-emerald-700 dark:text-emerald-400">الأب (المتوفى)</h4>
-                      <div className="space-y-1.5">
-                        <InfoRow label="الاسم" value={p.pereNom} />
-                        <InfoRow label="تاريخ الازدياد" value={formatDate(p.pereDateNaissance)} />
-                        <InfoRow label="تاريخ الوفاة" value={formatDate(p.pereDateDeces)} />
+                    <div className="border-l border-slate-200 dark:border-slate-700 md:pl-4">
+                      <h4 className="font-semibold mb-3 text-emerald-700 dark:text-emerald-400">الأب (المتوفى)</h4>
+                      <div className="flex items-start gap-4">
+                        <PhotoDisplay src={p.perePhoto} name={p.pereNom} size="md" shape="square" />
+                        <div className="space-y-1.5 flex-1">
+                          <InfoRow label="الاسم" value={p.pereNom} />
+                          <InfoRow label="تاريخ الازدياد" value={formatDate(p.pereDateNaissance)} />
+                          <InfoRow label="تاريخ الوفاة" value={formatDate(p.pereDateDeces)} />
+                        </div>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2 text-sky-700 dark:text-sky-400">الأم (الأرملة)</h4>
-                      <div className="space-y-1.5">
-                        <InfoRow label="الاسم" value={p.mereNom} />
-                        <InfoRow label="تاريخ الازدياد" value={formatDate(p.mereDateNaissance)} />
-                        <InfoRow label="رقم البطاقة" value={p.mereCin || "—"} />
-                        <InfoRow label="الحالة الصحية" value={p.mereSante || "—"} />
-                        {p.mereDateDeces && <InfoRow label="تاريخ الوفاة" value={formatDate(p.mereDateDeces)} />}
+                      <h4 className="font-semibold mb-3 text-sky-700 dark:text-sky-400">الأم (الأرملة)</h4>
+                      <div className="flex items-start gap-4">
+                        <PhotoDisplay src={p.merePhoto} name={p.mereNom} size="md" shape="square" />
+                        <div className="space-y-1.5 flex-1">
+                          <InfoRow label="الاسم" value={p.mereNom} />
+                          <InfoRow label="تاريخ الازدياد" value={formatDate(p.mereDateNaissance)} />
+                          <InfoRow label="رقم البطاقة" value={p.mereCin || "—"} />
+                          <InfoRow label="الحالة الصحية" value={p.mereSante || "—"} />
+                          {p.mereDateDeces && <InfoRow label="تاريخ الوفاة" value={formatDate(p.mereDateDeces)} />}
+                        </div>
                       </div>
                     </div>
                     {p.observations && (
@@ -412,6 +437,7 @@ export default function FamilyDetail() {
                 <Table>
                   <THead>
                     <tr>
+                      <TH>الصورة</TH>
                       <TH>الاسم الكامل</TH>
                       <TH>الجنس</TH>
                       <TH>السن</TH>
@@ -424,6 +450,9 @@ export default function FamilyDetail() {
                   <TBody>
                     {fOrphans.map((o) => (
                       <TR key={o.id}>
+                        <TD>
+                          <PhotoDisplay src={o.photo} name={`${o.prenom} ${o.nomFamille}`} size="sm" />
+                        </TD>
                         <TD className="font-medium">{o.prenom} {o.nomFamille}</TD>
                         <TD>
                           <Badge variant={o.sexe === "ذكر" ? "info" : "default"}>{o.sexe}</Badge>
@@ -790,7 +819,8 @@ function OrphanDialog({
   familyName: string;
   onSave: (data: Omit<Orphan, "id">, id?: string) => void;
 }) {
-  const { register, handleSubmit } = useForm({
+  const [photo, setPhoto] = useState<string | undefined>(orphan?.photo);
+  const { register, handleSubmit, watch } = useForm({
     values: {
       prenom: orphan?.prenom || "",
       nomFamille: orphan?.nomFamille || familyName,
@@ -801,6 +831,14 @@ function OrphanDialog({
     },
   });
 
+  // Sync photo state when orphan prop changes
+  useEffect(() => {
+    setPhoto(orphan?.photo);
+  }, [orphan?.id, orphan?.photo, open]);
+
+  const watchedPrenom = watch("prenom");
+  const watchedNom = watch("nomFamille");
+
   return (
     <Dialog
       open={open}
@@ -810,10 +848,19 @@ function OrphanDialog({
     >
       <form
         onSubmit={handleSubmit((data) => {
-          onSave({ ...data, familyId }, orphan?.id);
+          onSave({ ...data, familyId, photo }, orphan?.id);
         })}
         className="space-y-4"
       >
+        <div className="flex justify-center pb-3 border-b border-slate-100 dark:border-slate-800">
+          <PhotoUpload
+            value={photo}
+            onChange={setPhoto}
+            label="صورة اليتيم"
+            fallbackName={`${watchedPrenom} ${watchedNom}`}
+            size="lg"
+          />
+        </div>
         <div className="grid md:grid-cols-2 gap-4">
           <Input label="الاسم الشخصي *" {...register("prenom", { required: true })} />
           <Input label="الاسم العائلي *" {...register("nomFamille", { required: true })} />
@@ -856,8 +903,10 @@ function ParentDialog({
   familyId: string;
   onSave: (data: Omit<Parent, "id"> & { id?: string }) => void;
 }) {
-  const { register, handleSubmit } = useForm({
-    defaultValues: {
+  const [perePhoto, setPerePhoto] = useState<string | undefined>(parent?.perePhoto);
+  const [merePhoto, setMerePhoto] = useState<string | undefined>(parent?.merePhoto);
+  const { register, handleSubmit, watch } = useForm({
+    values: {
       pereNom: parent?.pereNom || "",
       pereDateNaissance: parent?.pereDateNaissance || "",
       pereDateDeces: parent?.pereDateDeces || "",
@@ -870,6 +919,14 @@ function ParentDialog({
     },
   });
 
+  useEffect(() => {
+    setPerePhoto(parent?.perePhoto);
+    setMerePhoto(parent?.merePhoto);
+  }, [parent?.id, parent?.perePhoto, parent?.merePhoto, open]);
+
+  const pereName = watch("pereNom");
+  const mereName = watch("mereNom");
+
   return (
     <Dialog
       open={open}
@@ -879,10 +936,21 @@ function ParentDialog({
     >
       <form
         onSubmit={handleSubmit((data) => {
-          onSave({ ...data, familyId, id: parent?.id });
+          onSave({ ...data, familyId, id: parent?.id, perePhoto, merePhoto });
         })}
         className="space-y-4"
       >
+        <div className="grid md:grid-cols-2 gap-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex flex-col items-center">
+            <h3 className="font-semibold text-emerald-700 dark:text-emerald-400 mb-3">الأب (المتوفى)</h3>
+            <PhotoUpload value={perePhoto} onChange={setPerePhoto} fallbackName={pereName} size="lg" />
+          </div>
+          <div className="flex flex-col items-center">
+            <h3 className="font-semibold text-sky-700 dark:text-sky-400 mb-3">الأم (الأرملة)</h3>
+            <PhotoUpload value={merePhoto} onChange={setMerePhoto} fallbackName={mereName} size="lg" />
+          </div>
+        </div>
+
         <h3 className="font-semibold text-emerald-700 dark:text-emerald-400">الأب (المتوفى)</h3>
         <div className="grid md:grid-cols-3 gap-4">
           <Input label="اسم الأب *" {...register("pereNom", { required: true })} />

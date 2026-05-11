@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Save, ArrowRight } from "lucide-react";
@@ -7,6 +8,7 @@ import { useAuthStore, canEdit } from "../stores/authStore";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Input, Select, Textarea } from "../components/ui/Input";
+import { PhotoUpload } from "../components/ui/PhotoUpload";
 import { toast } from "../components/ui/Toast";
 import type { Family, FamilyStatus, FamilyNature, KafalaType, ResponsibleNature } from "../types";
 
@@ -34,8 +36,9 @@ export default function FamilyForm() {
   const { currentUser } = useAuthStore();
 
   const existing = id ? getFamily(id) : undefined;
+  const [responsablePhoto, setResponsablePhoto] = useState<string | undefined>(existing?.responsable.photo);
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({
     defaultValues: existing
       ? {
           nomFamille: existing.nomFamille,
@@ -95,6 +98,7 @@ export default function FamilyForm() {
         cin: data.responsableCin,
         address: data.responsableAddress,
         phone: data.responsablePhone || data.telephone,
+        photo: responsablePhoto,
       },
     };
 
@@ -185,7 +189,17 @@ export default function FamilyForm() {
           <CardHeader>
             <CardTitle>المكلف بالأسرة</CardTitle>
           </CardHeader>
-          <CardContent className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardContent className="space-y-4">
+            <div className="flex justify-center md:justify-start pb-2 border-b border-slate-100 dark:border-slate-800">
+              <PhotoUpload
+                value={responsablePhoto}
+                onChange={setResponsablePhoto}
+                label="صورة المكلف"
+                fallbackName={watch("responsableNom") || ""}
+                size="lg"
+              />
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             <Input
               label="الاسم الكامل *"
               {...register("responsableNom", { required: "هذا الحقل مطلوب" })}
@@ -205,6 +219,7 @@ export default function FamilyForm() {
             <Input label="الهاتف" {...register("responsablePhone")} type="tel" />
             <div className="md:col-span-2 lg:col-span-2">
               <Input label="العنوان" {...register("responsableAddress")} />
+            </div>
             </div>
           </CardContent>
         </Card>

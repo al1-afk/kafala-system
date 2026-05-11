@@ -24,6 +24,7 @@ export interface Responsable {
   cin: string;
   address: string;
   phone: string;
+  photo?: string;
 }
 
 export interface Parent {
@@ -32,11 +33,13 @@ export interface Parent {
   pereNom: string;
   pereDateNaissance: string;
   pereDateDeces: string;
+  perePhoto?: string;
   mereNom: string;
   mereDateNaissance: string;
   mereCin: string;
   mereSante: HealthStatus | "";
   mereDateDeces?: string;
+  merePhoto?: string;
   observations?: string;
 }
 
@@ -49,6 +52,7 @@ export interface Orphan {
   dateNaissance: string;
   lieuNaissance: string;
   health: HealthStatus;
+  photo?: string;
 }
 
 export interface Schooling {

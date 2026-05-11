@@ -12,6 +12,7 @@ import { Dialog, DialogFooter } from "../components/ui/Dialog";
 import { ConfirmDialog } from "../components/ui/ConfirmDialog";
 import { EmptyState } from "../components/ui/EmptyState";
 import { Table, THead, TBody, TR, TH, TD } from "../components/ui/Table";
+import { PhotoDisplay } from "../components/ui/PhotoUpload";
 import { calculateAge, formatDate } from "../lib/utils";
 import { toast } from "../components/ui/Toast";
 import type { Workshop } from "../types";
@@ -220,6 +221,7 @@ export default function Workshops() {
                       <THead>
                         <tr>
                           <TH>#</TH>
+                          <TH>الصورة</TH>
                           <TH>اليتيم</TH>
                           <TH>السن</TH>
                           <TH>الجنس</TH>
@@ -232,6 +234,9 @@ export default function Workshops() {
                         {participants.map((p, i) => (
                           <TR key={p.reg.id}>
                             <TD className="font-mono text-slate-500">{i + 1}</TD>
+                            <TD>
+                              <PhotoDisplay src={p.orphan!.photo} name={`${p.orphan!.prenom} ${p.orphan!.nomFamille}`} size="sm" />
+                            </TD>
                             <TD className="font-medium">{p.orphan!.prenom} {p.orphan!.nomFamille}</TD>
                             <TD>{calculateAge(p.orphan!.dateNaissance) ?? "—"}</TD>
                             <TD>

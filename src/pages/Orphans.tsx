@@ -10,6 +10,7 @@ import { Select } from "../components/ui/Input";
 import { Table, THead, TBody, TR, TH, TD } from "../components/ui/Table";
 import { Badge } from "../components/ui/Badge";
 import { EmptyState } from "../components/ui/EmptyState";
+import { PhotoDisplay } from "../components/ui/PhotoUpload";
 import { calculateAge, downloadCSV, formatDate } from "../lib/utils";
 import { toast } from "../components/ui/Toast";
 
@@ -128,6 +129,7 @@ export default function Orphans() {
           <THead>
             <tr>
               <TH>ر.ت</TH>
+              <TH>الصورة</TH>
               <TH>الاسم العائلي</TH>
               <TH>الاسم الشخصي</TH>
               <TH>الجنس</TH>
@@ -144,6 +146,13 @@ export default function Orphans() {
             {rows.map((r) => (
               <TR key={r.orphan.id}>
                 <TD className="font-mono text-slate-500">{r.rt}</TD>
+                <TD>
+                  <PhotoDisplay
+                    src={r.orphan.photo}
+                    name={`${r.orphan.prenom} ${r.orphan.nomFamille}`}
+                    size="sm"
+                  />
+                </TD>
                 <TD className="font-medium">{r.orphan.nomFamille}</TD>
                 <TD className="font-medium">{r.orphan.prenom}</TD>
                 <TD>
