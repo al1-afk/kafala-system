@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Sprout, User, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Lock, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import { Button } from "../components/ui/Button";
 import { toast } from "../components/ui/Toast";
@@ -35,10 +35,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-white to-sky-50 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-brand-50 via-white to-accent-50 dark:from-slate-950 dark:via-slate-900 dark:to-brand-950">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-emerald-200/30 dark:bg-emerald-900/20 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-sky-200/30 dark:bg-sky-900/20 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-brand-200/30 dark:bg-brand-900/20 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-accent-200/30 dark:bg-accent-900/20 blur-3xl" />
       </div>
 
       <motion.div
@@ -48,17 +48,27 @@ export default function Login() {
         className="relative w-full max-w-md"
       >
         <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-          <div className="bg-gradient-to-br from-emerald-500 to-emerald-700 p-6 text-white text-center">
+          <div className="bg-gradient-to-br from-brand-600 via-brand-700 to-brand-900 p-6 text-white text-center relative">
+            <div className="absolute top-0 left-0 w-32 h-32 bg-accent-500/20 rounded-full blur-3xl"></div>
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring" }}
-              className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center mx-auto mb-3"
+              className="relative w-32 h-32 rounded-2xl bg-white shadow-lg flex items-center justify-center mx-auto mb-3 p-2"
             >
-              <Sprout className="w-9 h-9" />
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="جمعية بسمة"
+                className="w-full h-full object-contain"
+              />
             </motion.div>
-            <h1 className="text-2xl font-bold">نظام الكفالة</h1>
-            <p className="text-emerald-100 text-sm mt-1">إدارة دعم الأيتام</p>
+            <h1 className="text-2xl font-bold">جمعية بسمة</h1>
+            <p className="text-accent-300 text-sm font-semibold mt-0.5">للتنمية البشرية</p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <span className="h-px w-8 bg-white/40"></span>
+              <p className="text-white/90 text-xs">كفالة ورعاية اليتيم - الكردان الكبير</p>
+              <span className="h-px w-8 bg-white/40"></span>
+            </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-4">

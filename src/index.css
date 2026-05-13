@@ -140,7 +140,15 @@ body.dark {
 }
 
 .gradient-primary {
-  background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+  background: linear-gradient(135deg, #229150 0%, #005020 100%);
+}
+
+.gradient-accent {
+  background: linear-gradient(135deg, #ff9d29 0%, #d97f00 100%);
+}
+
+.gradient-brand {
+  background: linear-gradient(135deg, #229150 0%, #f39200 100%);
 }
 
 .gradient-secondary {

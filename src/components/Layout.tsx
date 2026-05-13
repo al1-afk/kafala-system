@@ -101,14 +101,17 @@ export function Layout() {
       >
         <div className="h-full flex flex-col">
           {/* Brand */}
-          <div className="px-5 py-5 border-b border-slate-200 dark:border-slate-800">
+          <div className="px-4 py-4 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-l from-brand-50/60 to-transparent dark:from-brand-950/30">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500 to-emerald-700 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-                <Sprout className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="font-bold text-lg leading-tight">نظام الكفالة</p>
-                <p className="text-xs text-slate-500 dark:text-slate-400">إدارة دعم الأيتام</p>
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="جمعية بسمة"
+                className="h-14 w-auto object-contain group-hover:scale-105 transition-transform"
+              />
+              <div className="min-w-0 flex-1">
+                <p className="font-bold text-sm leading-tight text-brand-800 dark:text-brand-300 truncate">جمعية بسمة</p>
+                <p className="text-[11px] text-accent-600 dark:text-accent-400 font-semibold leading-tight">للتنمية البشرية</p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">كفالة ورعاية اليتيم</p>
               </div>
             </Link>
           </div>
@@ -207,8 +210,21 @@ export function Layout() {
           <Outlet />
         </main>
 
-        <footer className="px-4 lg:px-6 py-4 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 text-center no-print">
-          نظام الكفالة — جمعية البر والإحسان، وجدة — جميع الحقوق محفوظة © {new Date().getFullYear()}
+        <footer className="px-4 lg:px-6 py-4 border-t border-slate-200 dark:border-slate-800 text-center no-print">
+          <div className="flex items-center justify-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="جمعية بسمة"
+              className="h-6 w-auto object-contain opacity-70"
+            />
+            <span>
+              <strong className="text-brand-700 dark:text-brand-300">جمعية بسمة للتنمية البشرية</strong>
+              <span className="mx-1.5">·</span>
+              كفالة ورعاية اليتيم - الكردان الكبير
+              <span className="mx-1.5">·</span>
+              © {new Date().getFullYear()}
+            </span>
+          </div>
         </footer>
       </div>
     </div>

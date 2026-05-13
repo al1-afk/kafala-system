@@ -159,17 +159,30 @@ export default function Dashboard() {
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-wrap items-center justify-between gap-3"
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-l from-brand-700 via-brand-800 to-brand-900 p-5 lg:p-6 shadow-lg"
       >
-        <div>
-          <h1 className="text-2xl lg:text-3xl font-bold">لوحة القيادة</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            نظرة شاملة على نشاط الجمعية وحالة الملفات
-          </p>
-        </div>
-        <div className="flex gap-2">
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-accent-500/20 blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-white/10 blur-2xl pointer-events-none" />
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex w-16 h-16 rounded-xl bg-white shadow-md p-2 items-center justify-center shrink-0">
+              <img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="جمعية بسمة"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <div className="text-white">
+              <h1 className="text-2xl lg:text-3xl font-bold leading-tight">لوحة القيادة</h1>
+              <p className="text-brand-100 text-sm mt-1">
+                <span className="font-semibold text-accent-300">جمعية بسمة للتنمية البشرية</span>
+                <span className="mx-1.5 opacity-60">·</span>
+                كفالة ورعاية اليتيم
+              </p>
+            </div>
+          </div>
           <Link to="/families/new">
-            <Button>
+            <Button className="bg-accent-600 hover:bg-accent-700 shadow-md">
               <Plus className="w-4 h-4" />
               ملف جديد
             </Button>
@@ -184,13 +197,13 @@ export default function Dashboard() {
           label="إجمالي الملفات"
           value={stats.total}
           trend={`${stats.active} نشيط`}
-          gradient="from-emerald-500 to-emerald-700"
+          gradient="from-brand-600 to-brand-900"
         />
         <KpiCard
           icon={<Baby className="w-5 h-5" />}
           label="الأيتام"
           value={stats.orphansTotal}
-          gradient="from-sky-500 to-sky-700"
+          gradient="from-accent-500 to-accent-700"
         />
         <KpiCard
           icon={<ClipboardList className="w-5 h-5" />}
