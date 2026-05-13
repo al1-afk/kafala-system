@@ -101,7 +101,13 @@ export function Layout() {
       >
         <div className="h-full flex flex-col">
           {/* Brand */}
-          <div className="px-4 py-4 border-b border-slate-200 dark:border-slate-800 bg-gradient-to-l from-brand-50/60 to-transparent dark:from-brand-950/30">
+          <div
+            className="px-4 py-4 border-b border-slate-200 dark:border-slate-800"
+            style={{
+              background:
+                "linear-gradient(to left, rgba(34, 145, 80, 0.08), transparent)",
+            }}
+          >
             <Link to="/" className="flex items-center gap-3 group">
               <img
                 src={`${import.meta.env.BASE_URL}logo.png`}
@@ -109,9 +115,21 @@ export function Layout() {
                 className="h-14 w-auto object-contain group-hover:scale-105 transition-transform"
               />
               <div className="min-w-0 flex-1">
-                <p className="font-bold text-sm leading-tight text-brand-800 dark:text-brand-300 truncate">جمعية بسمة</p>
-                <p className="text-[11px] text-accent-600 dark:text-accent-400 font-semibold leading-tight">للتنمية البشرية</p>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">كفالة ورعاية اليتيم</p>
+                <p
+                  className="font-extrabold text-sm leading-tight truncate"
+                  style={{ color: "#0e6e37" }}
+                >
+                  جمعية بسمة
+                </p>
+                <p
+                  className="text-[11px] font-bold leading-tight"
+                  style={{ color: "#d97f00" }}
+                >
+                  للتنمية البشرية
+                </p>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-0.5 truncate">
+                  كفالة ورعاية اليتيم
+                </p>
               </div>
             </Link>
           </div>
@@ -138,20 +156,32 @@ export function Layout() {
                 end={item.end}
                 className={({ isActive }) =>
                   cn(
-                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group",
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group relative",
                     isActive
-                      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300"
+                      ? "text-emerald-800 dark:text-emerald-300"
                       : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
                   )
+                }
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        background:
+                          "linear-gradient(to left, rgba(34, 145, 80, 0.12), rgba(34, 145, 80, 0.02))",
+                        borderRight: "3px solid #229150",
+                      }
+                    : {}
                 }
               >
                 {({ isActive }) => (
                   <>
-                    <span className={cn(isActive ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400")}>
+                    <span
+                      style={isActive ? { color: "#187f43" } : undefined}
+                      className={!isActive ? "text-slate-500 dark:text-slate-400" : ""}
+                    >
                       {item.icon}
                     </span>
                     <span className="flex-1">{item.label}</span>
-                    {isActive && <ChevronLeft className="w-4 h-4" />}
+                    {isActive && <ChevronLeft className="w-4 h-4" style={{ color: "#229150" }} />}
                   </>
                 )}
               </NavLink>

@@ -162,80 +162,129 @@ export default function Families() {
           }
         />
       ) : (
-        <Table>
-          <THead>
-            <tr>
-              <TH>رقم الملف</TH>
-              <TH>تاريخ التسجيل</TH>
-              <TH>اسم العائلة</TH>
-              <TH>اسم المكلف</TH>
-              <TH>الهاتف</TH>
-              <TH>طبيعة الملف</TH>
-              <TH>عدد الأيتام</TH>
-              <TH>الحالة</TH>
-              <TH className="text-left">إجراءات</TH>
-            </tr>
-          </THead>
-          <TBody>
+        <>
+          {/* Mobile: card list */}
+          <div className="grid gap-3 md:hidden">
             {filtered.map((f) => {
               const orphanCount = orphans.filter((o) => o.familyId === f.id).length;
               return (
-                <TR key={f.id}>
-                  <TD className="font-mono font-semibold">{f.numeroDossier}</TD>
-                  <TD className="text-slate-600 dark:text-slate-400">{formatDate(f.dateEnregistrement)}</TD>
-                  <TD className="font-medium">{f.nomFamille}</TD>
-                  <TD>
-                    <div className="flex items-center gap-2">
-                      <PhotoDisplay src={f.responsable.photo} name={f.responsable.fullName} size="sm" />
-                      <span>{f.responsable.fullName}</span>
+                <Link
+                  key={f.id}
+                  to={`/families/${f.id}`}
+                  className="block bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start gap-3">
+                    <PhotoDisplay src={f.responsable.photo} name={f.responsable.fullName} size="md" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                          #{f.numeroDossier}
+                        </span>
+                        <span className="font-bold text-base truncate">{f.nomFamille}</span>
+                        <Badge
+                          variant={
+                            f.statut === "نشيط" ? "success" : f.statut === "معلق" ? "warning" : "danger"
+                          }
+                        >
+                          {f.statut}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1 truncate">
+                        {f.responsable.fullName}
+                      </p>
+                      <div className="flex items-center justify-between gap-2 mt-2 text-xs">
+                        <Badge variant="info" className="text-[10px]">{f.natureDossier}</Badge>
+                        <span className="text-slate-500 dark:text-slate-400">
+                          {orphanCount} يتيم · {formatDate(f.dateEnregistrement)}
+                        </span>
+                      </div>
                     </div>
-                  </TD>
-                  <TD className="font-mono text-sm">{f.telephone || "—"}</TD>
-                  <TD>
-                    <Badge variant="info">{f.natureDossier}</Badge>
-                  </TD>
-                  <TD className="text-center">{orphanCount}</TD>
-                  <TD>
-                    <Badge
-                      variant={
-                        f.statut === "نشيط" ? "success" : f.statut === "معلق" ? "warning" : "danger"
-                      }
-                    >
-                      {f.statut}
-                    </Badge>
-                  </TD>
-                  <TD>
-                    <div className="flex items-center gap-1 justify-start">
-                      <Link to={`/families/${f.id}`}>
-                        <Button size="icon" variant="ghost" title="عرض">
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                      </Link>
-                      {canEdit(currentUser?.role) && (
-                        <>
-                          <Link to={`/families/${f.id}?edit=1`}>
-                            <Button size="icon" variant="ghost" title="تعديل">
-                              <Pencil className="w-4 h-4" />
-                            </Button>
-                          </Link>
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
-                            title="حذف"
-                            onClick={() => setConfirmId(f.id)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </>
-                      )}
-                    </div>
-                  </TD>
-                </TR>
+                  </div>
+                </Link>
               );
             })}
-          </TBody>
-        </Table>
+          </div>
+
+          {/* Desktop: table */}
+          <div className="hidden md:block">
+            <Table>
+              <THead>
+                <tr>
+                  <TH>رقم الملف</TH>
+                  <TH>تاريخ التسجيل</TH>
+                  <TH>اسم العائلة</TH>
+                  <TH>اسم المكلف</TH>
+                  <TH>الهاتف</TH>
+                  <TH>طبيعة الملف</TH>
+                  <TH>الأيتام</TH>
+                  <TH>الحالة</TH>
+                  <TH className="text-left">إجراءات</TH>
+                </tr>
+              </THead>
+              <TBody>
+                {filtered.map((f) => {
+                  const orphanCount = orphans.filter((o) => o.familyId === f.id).length;
+                  return (
+                    <TR key={f.id}>
+                      <TD className="font-mono font-semibold text-emerald-700 dark:text-emerald-400">
+                        #{f.numeroDossier}
+                      </TD>
+                      <TD className="text-slate-600 dark:text-slate-400">{formatDate(f.dateEnregistrement)}</TD>
+                      <TD className="font-medium">{f.nomFamille}</TD>
+                      <TD>
+                        <div className="flex items-center gap-2">
+                          <PhotoDisplay src={f.responsable.photo} name={f.responsable.fullName} size="sm" />
+                          <span>{f.responsable.fullName}</span>
+                        </div>
+                      </TD>
+                      <TD className="font-mono text-sm">{f.telephone || "—"}</TD>
+                      <TD>
+                        <Badge variant="info">{f.natureDossier}</Badge>
+                      </TD>
+                      <TD className="text-center font-semibold">{orphanCount}</TD>
+                      <TD>
+                        <Badge
+                          variant={
+                            f.statut === "نشيط" ? "success" : f.statut === "معلق" ? "warning" : "danger"
+                          }
+                        >
+                          {f.statut}
+                        </Badge>
+                      </TD>
+                      <TD>
+                        <div className="flex items-center gap-1 justify-start">
+                          <Link to={`/families/${f.id}`}>
+                            <Button size="icon" variant="ghost" title="عرض">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </Link>
+                          {canEdit(currentUser?.role) && (
+                            <>
+                              <Link to={`/families/${f.id}/edit`}>
+                                <Button size="icon" variant="ghost" title="تعديل">
+                                  <Pencil className="w-4 h-4" />
+                                </Button>
+                              </Link>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                                title="حذف"
+                                onClick={() => setConfirmId(f.id)}
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </TD>
+                    </TR>
+                  );
+                })}
+              </TBody>
+            </Table>
+          </div>
+        </>
       )}
 
       <ConfirmDialog

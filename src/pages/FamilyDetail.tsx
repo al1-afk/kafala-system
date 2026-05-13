@@ -177,16 +177,31 @@ export default function FamilyDetail() {
 
       {/* Score card */}
       {score && (
-        <Card className="bg-gradient-to-br from-emerald-50 to-sky-50 dark:from-emerald-950/40 dark:to-sky-950/40 border-emerald-200 dark:border-emerald-900">
-          <CardContent className="pt-5">
-            <div className="grid sm:grid-cols-4 lg:grid-cols-8 gap-3">
-              <div className="sm:col-span-2 lg:col-span-2">
-                <p className="text-xs uppercase text-slate-500 mb-1">المؤشر العام</p>
-                <p className="text-4xl font-extrabold text-emerald-700 dark:text-emerald-400">
-                  {(score.total + family.pointMoctab).toFixed(2)}
+        <Card className="overflow-hidden border-emerald-200 dark:border-emerald-900">
+          <div
+            className="px-5 py-4 grid md:grid-cols-[auto_1fr] gap-5 items-center"
+            style={{
+              background:
+                "linear-gradient(135deg, #e6f4ec 0%, #fff4e5 100%)",
+            }}
+          >
+            {/* Main score */}
+            <div className="flex items-center gap-4 md:border-l md:border-emerald-200 dark:md:border-emerald-900 md:pl-5 md:ml-2">
+              <div
+                className="w-20 h-20 rounded-2xl flex flex-col items-center justify-center shadow-md text-white"
+                style={{ background: "linear-gradient(135deg, #229150 0%, #0e6e37 100%)" }}
+              >
+                <span className="text-2xl font-extrabold leading-none">
+                  {(score.total + family.pointMoctab).toFixed(1)}
+                </span>
+                <span className="text-[10px] font-medium opacity-80 mt-0.5">نقطة</span>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
+                  المؤشر العام
                 </p>
                 <Badge
-                  className="mt-2"
+                  className="mt-1.5"
                   variant={
                     score.classification === "ممتاز"
                       ? "success"
@@ -197,18 +212,25 @@ export default function FamilyDetail() {
                       : "danger"
                   }
                 >
-                  {score.classification}
+                  تصنيف {score.classification}
                 </Badge>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5">
+                  حساب تلقائي بناء على المؤشرات
+                </p>
               </div>
+            </div>
+
+            {/* Breakdown */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
               <ScoreBreakdownItem label="السن" value={score.ageScore} />
               <ScoreBreakdownItem label="الصحة" value={score.healthScore} />
               <ScoreBreakdownItem label="نوع الكفالة" value={score.kafalaScore} />
               <ScoreBreakdownItem label="السكن" value={score.housingScore} />
               <ScoreBreakdownItem label="الادخار" value={score.savingsScore} />
               <ScoreBreakdownItem label="التمدرس" value={score.schoolingScore} />
-              <ScoreBreakdownItem label="نقطة المكتب" value={family.pointMoctab} />
+              <ScoreBreakdownItem label="نقطة المكتب" value={family.pointMoctab} highlight />
             </div>
-          </CardContent>
+          </div>
         </Card>
       )}
 
@@ -703,11 +725,23 @@ function InfoRow({ label, value, icon }: { label: string; value: string; icon?: 
   );
 }
 
-function ScoreBreakdownItem({ label, value }: { label: string; value: number }) {
+function ScoreBreakdownItem({ label, value, highlight }: { label: string; value: number; highlight?: boolean }) {
   return (
-    <div className="bg-white/60 dark:bg-slate-900/60 rounded-lg p-2.5">
-      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
-      <p className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">{value.toFixed(2)}</p>
+    <div
+      className={`rounded-lg p-2.5 transition-all ${
+        highlight
+          ? "bg-white shadow-sm border border-orange-200 dark:bg-slate-900 dark:border-orange-900/50"
+          : "bg-white/70 dark:bg-slate-900/70"
+      }`}
+    >
+      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-medium leading-tight">{label}</p>
+      <p
+        className={`text-lg font-bold leading-tight mt-1 ${
+          highlight ? "text-orange-600 dark:text-orange-400" : "text-slate-900 dark:text-slate-100"
+        }`}
+      >
+        {value.toFixed(2)}
+      </p>
     </div>
   );
 }

@@ -98,6 +98,25 @@ body.dark {
   .print-page {
     page-break-after: always;
   }
+  /* Force full-width content in print */
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .lg\:mr-72 {
+    margin-right: 0 !important;
+  }
+  aside {
+    display: none !important;
+  }
+  /* Cards should not break across pages */
+  .rounded-xl, .rounded-2xl {
+    break-inside: avoid;
+  }
+  /* Brighten muted text */
+  .text-slate-500, .text-slate-400, .dark\:text-slate-400 {
+    color: #475569 !important;
+  }
 }
 
 .print-only {
