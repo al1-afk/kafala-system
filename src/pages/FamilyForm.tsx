@@ -14,6 +14,7 @@ import type { Family, FamilyStatus, FamilyNature, KafalaType, ResponsibleNature 
 
 interface FormValues {
   nomFamille: string;
+  nomFamilleFr: string;
   dateEnregistrement: string;
   statut: FamilyStatus;
   natureDossier: FamilyNature;
@@ -22,9 +23,11 @@ interface FormValues {
   pointMoctab: number;
   notes: string;
   responsableNom: string;
+  responsableNomFr: string;
   responsableNature: ResponsibleNature;
   responsableCin: string;
   responsableAddress: string;
+  responsableAddressFr: string;
   responsablePhone: string;
 }
 
@@ -42,6 +45,7 @@ export default function FamilyForm() {
     defaultValues: existing
       ? {
           nomFamille: existing.nomFamille,
+          nomFamilleFr: existing.nomFamilleFr || "",
           dateEnregistrement: existing.dateEnregistrement,
           statut: existing.statut,
           natureDossier: existing.natureDossier,
@@ -50,13 +54,16 @@ export default function FamilyForm() {
           pointMoctab: existing.pointMoctab,
           notes: existing.notes,
           responsableNom: existing.responsable.fullName,
+          responsableNomFr: existing.responsable.fullNameFr || "",
           responsableNature: (existing.responsable.natureResponsable || "الأم") as ResponsibleNature,
           responsableCin: existing.responsable.cin,
           responsableAddress: existing.responsable.address,
+          responsableAddressFr: existing.responsable.addressFr || "",
           responsablePhone: existing.responsable.phone,
         }
       : {
           nomFamille: "",
+          nomFamilleFr: "",
           dateEnregistrement: new Date().toISOString().slice(0, 10),
           statut: "نشيط",
           natureDossier: "كفالة شهرية",
@@ -65,9 +72,11 @@ export default function FamilyForm() {
           pointMoctab: 0,
           notes: "",
           responsableNom: "",
+          responsableNomFr: "",
           responsableNature: "الأم",
           responsableCin: "",
           responsableAddress: "",
+          responsableAddressFr: "",
           responsablePhone: "",
         },
   });
@@ -85,6 +94,7 @@ export default function FamilyForm() {
   const onSubmit = (data: FormValues) => {
     const payload: Omit<Family, "id" | "numeroDossier" | "createdAt" | "updatedAt"> = {
       nomFamille: data.nomFamille,
+      nomFamilleFr: data.nomFamilleFr || undefined,
       dateEnregistrement: data.dateEnregistrement,
       statut: data.statut,
       natureDossier: data.natureDossier,
@@ -94,9 +104,11 @@ export default function FamilyForm() {
       notes: data.notes,
       responsable: {
         fullName: data.responsableNom,
+        fullNameFr: data.responsableNomFr || undefined,
         natureResponsable: data.responsableNature,
         cin: data.responsableCin,
         address: data.responsableAddress,
+        addressFr: data.responsableAddressFr || undefined,
         phone: data.responsablePhone || data.telephone,
         photo: responsablePhoto,
       },
@@ -144,6 +156,12 @@ export default function FamilyForm() {
               label="اسم العائلة *"
               {...register("nomFamille", { required: "هذا الحقل مطلوب" })}
               error={errors.nomFamille?.message}
+            />
+            <Input
+              label="Nom de famille (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("nomFamilleFr")}
             />
             <Input
               label="تاريخ التسجيل *"
@@ -205,6 +223,12 @@ export default function FamilyForm() {
               {...register("responsableNom", { required: "هذا الحقل مطلوب" })}
               error={errors.responsableNom?.message}
             />
+            <Input
+              label="Nom complet (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("responsableNomFr")}
+            />
             <Select label="طبيعة المكلف" {...register("responsableNature")}>
               <option value="الأم">الأم</option>
               <option value="الجد">الجد</option>
@@ -217,8 +241,14 @@ export default function FamilyForm() {
             </Select>
             <Input label="رقم البطاقة الوطنية" {...register("responsableCin")} />
             <Input label="الهاتف" {...register("responsablePhone")} type="tel" />
-            <div className="md:col-span-2 lg:col-span-2">
-              <Input label="العنوان" {...register("responsableAddress")} />
+            <Input label="العنوان" {...register("responsableAddress")} />
+            <div className="md:col-span-2 lg:col-span-3">
+              <Input
+                label="Adresse (FR)"
+                dir="ltr"
+                placeholder="Latin / Français"
+                {...register("responsableAddressFr")}
+              />
             </div>
             </div>
           </CardContent>

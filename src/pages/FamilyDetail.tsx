@@ -142,6 +142,11 @@ export default function FamilyDetail() {
           </button>
           <div className="flex items-center gap-3 flex-wrap">
             <h1 className="text-2xl lg:text-3xl font-bold">{family.nomFamille}</h1>
+            {family.nomFamilleFr && (
+              <span className="text-lg text-slate-500 dark:text-slate-400 font-normal" dir="ltr">
+                · {family.nomFamilleFr}
+              </span>
+            )}
             <span className="font-mono text-emerald-600 dark:text-emerald-400 text-lg">#{family.numeroDossier}</span>
             <Badge
               variant={family.statut === "نشيط" ? "success" : family.statut === "معلق" ? "warning" : "danger"}
@@ -351,12 +356,20 @@ export default function FamilyDetail() {
                 />
                 <div className="grid md:grid-cols-2 gap-4 text-sm flex-1 w-full">
                   <InfoRow label="الاسم الكامل" value={family.responsable.fullName} />
+                  {family.responsable.fullNameFr && (
+                    <InfoRow label="Nom complet (FR)" value={family.responsable.fullNameFr} />
+                  )}
                   <InfoRow label="طبيعة المكلف" value={family.responsable.natureResponsable || "—"} />
                   <InfoRow label="رقم البطاقة الوطنية" value={family.responsable.cin || "—"} />
                   <InfoRow label="الهاتف" value={family.responsable.phone || "—"} />
                   <div className="md:col-span-2">
                     <InfoRow label="العنوان" value={family.responsable.address || "—"} />
                   </div>
+                  {family.responsable.addressFr && (
+                    <div className="md:col-span-2">
+                      <InfoRow label="Adresse (FR)" value={family.responsable.addressFr} />
+                    </div>
+                  )}
                 </div>
               </div>
               {editable && (
@@ -398,22 +411,28 @@ export default function FamilyDetail() {
                 fParents.map((p) => (
                   <div key={p.id} className="grid md:grid-cols-2 gap-4 text-sm">
                     <div className="border-l border-slate-200 dark:border-slate-700 md:pl-4">
-                      <h4 className="font-semibold mb-3 text-emerald-700 dark:text-emerald-400">الأب (المتوفى)</h4>
+                      <h4 className="font-semibold mb-3 text-emerald-700 dark:text-emerald-400">الأب (المتوفى) / Père</h4>
                       <div className="flex items-start gap-4">
                         <PhotoDisplay src={p.perePhoto} name={p.pereNom} size="md" shape="square" />
                         <div className="space-y-1.5 flex-1">
                           <InfoRow label="الاسم" value={p.pereNom} />
+                          {p.pereNomFr && (
+                            <InfoRow label="Nom (FR)" value={p.pereNomFr} />
+                          )}
                           <InfoRow label="تاريخ الازدياد" value={formatDate(p.pereDateNaissance)} />
                           <InfoRow label="تاريخ الوفاة" value={formatDate(p.pereDateDeces)} />
                         </div>
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-3 text-sky-700 dark:text-sky-400">الأم (الأرملة)</h4>
+                      <h4 className="font-semibold mb-3 text-sky-700 dark:text-sky-400">الأم (الأرملة) / Mère</h4>
                       <div className="flex items-start gap-4">
                         <PhotoDisplay src={p.merePhoto} name={p.mereNom} size="md" shape="square" />
                         <div className="space-y-1.5 flex-1">
                           <InfoRow label="الاسم" value={p.mereNom} />
+                          {p.mereNomFr && (
+                            <InfoRow label="Nom (FR)" value={p.mereNomFr} />
+                          )}
                           <InfoRow label="تاريخ الازدياد" value={formatDate(p.mereDateNaissance)} />
                           <InfoRow label="رقم البطاقة" value={p.mereCin || "—"} />
                           <InfoRow label="الحالة الصحية" value={p.mereSante || "—"} />
@@ -464,7 +483,8 @@ export default function FamilyDetail() {
                       <TH>الجنس</TH>
                       <TH>السن</TH>
                       <TH>تاريخ الازدياد</TH>
-                      <TH>مكان الازدياد</TH>
+                      <TH>المؤسسة</TH>
+                      <TH>العنوان</TH>
                       <TH>الحالة الصحية</TH>
                       {editable && <TH className="text-left">إجراءات</TH>}
                     </tr>
@@ -475,13 +495,35 @@ export default function FamilyDetail() {
                         <TD>
                           <PhotoDisplay src={o.photo} name={`${o.prenom} ${o.nomFamille}`} size="sm" />
                         </TD>
-                        <TD className="font-medium">{o.prenom} {o.nomFamille}</TD>
+                        <TD>
+                          <div className="font-medium">{o.prenom} {o.nomFamille}</div>
+                          {(o.prenomFr || o.nomFamilleFr) && (
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400" dir="ltr">
+                              {o.prenomFr} {o.nomFamilleFr}
+                            </div>
+                          )}
+                        </TD>
                         <TD>
                           <Badge variant={o.sexe === "ذكر" ? "info" : "default"}>{o.sexe}</Badge>
                         </TD>
                         <TD>{calculateAge(o.dateNaissance) ?? "—"}</TD>
                         <TD>{formatDate(o.dateNaissance)}</TD>
-                        <TD>{o.lieuNaissance || "—"}</TD>
+                        <TD className="max-w-[160px]">
+                          <div className="truncate">{o.etablissement || "—"}</div>
+                          {o.etablissementFr && (
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate" dir="ltr">
+                              {o.etablissementFr}
+                            </div>
+                          )}
+                        </TD>
+                        <TD className="max-w-[180px]">
+                          <div className="truncate">{o.adresse || "—"}</div>
+                          {o.adresseFr && (
+                            <div className="text-[10px] text-slate-500 dark:text-slate-400 truncate" dir="ltr">
+                              {o.adresseFr}
+                            </div>
+                          )}
+                        </TD>
                         <TD>
                           <Badge variant={o.health === "سليم" ? "success" : o.health === "إعاقة" ? "danger" : "warning"}>
                             {o.health}
@@ -857,11 +899,17 @@ function OrphanDialog({
   const { register, handleSubmit, watch } = useForm({
     values: {
       prenom: orphan?.prenom || "",
+      prenomFr: orphan?.prenomFr || "",
       nomFamille: orphan?.nomFamille || familyName,
+      nomFamilleFr: orphan?.nomFamilleFr || "",
       sexe: (orphan?.sexe || "ذكر") as Sex,
       dateNaissance: orphan?.dateNaissance || "",
       lieuNaissance: orphan?.lieuNaissance || "",
       health: (orphan?.health || "سليم") as HealthStatus,
+      adresse: orphan?.adresse || "",
+      adresseFr: orphan?.adresseFr || "",
+      etablissement: orphan?.etablissement || "",
+      etablissementFr: orphan?.etablissementFr || "",
     },
   });
 
@@ -882,9 +930,22 @@ function OrphanDialog({
     >
       <form
         onSubmit={handleSubmit((data) => {
-          onSave({ ...data, familyId, photo }, orphan?.id);
+          onSave(
+            {
+              ...data,
+              familyId,
+              photo,
+              prenomFr: data.prenomFr || undefined,
+              nomFamilleFr: data.nomFamilleFr || undefined,
+              adresse: data.adresse || undefined,
+              adresseFr: data.adresseFr || undefined,
+              etablissement: data.etablissement || undefined,
+              etablissementFr: data.etablissementFr || undefined,
+            },
+            orphan?.id
+          );
         })}
-        className="space-y-4"
+        className="space-y-5"
       >
         <div className="flex justify-center pb-3 border-b border-slate-100 dark:border-slate-800">
           <PhotoUpload
@@ -895,21 +956,85 @@ function OrphanDialog({
             size="lg"
           />
         </div>
-        <div className="grid md:grid-cols-2 gap-4">
-          <Input label="الاسم الشخصي *" {...register("prenom", { required: true })} />
-          <Input label="الاسم العائلي *" {...register("nomFamille", { required: true })} />
-          <Select label="الجنس" {...register("sexe")}>
-            <option value="ذكر">ذكر</option>
-            <option value="أنثى">أنثى</option>
-          </Select>
-          <Input label="تاريخ الازدياد *" type="date" {...register("dateNaissance", { required: true })} />
-          <Input label="مكان الازدياد" {...register("lieuNaissance")} />
-          <Select label="الحالة الصحية" {...register("health")}>
-            <option value="سليم">سليم</option>
-            <option value="مرض مزمن">مرض مزمن</option>
-            <option value="إعاقة">إعاقة</option>
-          </Select>
+
+        {/* Identity */}
+        <div>
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            الهوية / Identité
+          </h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Input label="الاسم الشخصي *" {...register("prenom", { required: true })} />
+            <Input
+              label="Prénom (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("prenomFr")}
+            />
+            <Input label="الاسم العائلي *" {...register("nomFamille", { required: true })} />
+            <Input
+              label="Nom de famille (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("nomFamilleFr")}
+            />
+            <Select label="الجنس" {...register("sexe")}>
+              <option value="ذكر">ذكر</option>
+              <option value="أنثى">أنثى</option>
+            </Select>
+            <Input
+              label="تاريخ الازدياد *"
+              type="date"
+              {...register("dateNaissance", { required: true })}
+            />
+            <Input label="مكان الازدياد" {...register("lieuNaissance")} />
+            <Select label="الحالة الصحية" {...register("health")}>
+              <option value="سليم">سليم</option>
+              <option value="مرض مزمن">مرض مزمن</option>
+              <option value="إعاقة">إعاقة</option>
+            </Select>
+          </div>
         </div>
+
+        {/* Address */}
+        <div>
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            العنوان / Adresse
+          </h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Input
+              label="العنوان"
+              {...register("adresse")}
+              placeholder="حي، شارع، رقم..."
+            />
+            <Input
+              label="Adresse (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("adresseFr")}
+            />
+          </div>
+        </div>
+
+        {/* Institution */}
+        <div>
+          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">
+            المؤسسة / Établissement
+          </h4>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Input
+              label="اسم المؤسسة"
+              {...register("etablissement")}
+              placeholder="مدرسة، ثانوية، روض..."
+            />
+            <Input
+              label="Nom de l'établissement (FR)"
+              dir="ltr"
+              placeholder="Latin / Français"
+              {...register("etablissementFr")}
+            />
+          </div>
+        </div>
+
         <DialogFooter>
           <Button type="submit">
             <Save className="w-4 h-4" />
@@ -942,9 +1067,11 @@ function ParentDialog({
   const { register, handleSubmit, watch } = useForm({
     values: {
       pereNom: parent?.pereNom || "",
+      pereNomFr: parent?.pereNomFr || "",
       pereDateNaissance: parent?.pereDateNaissance || "",
       pereDateDeces: parent?.pereDateDeces || "",
       mereNom: parent?.mereNom || "",
+      mereNomFr: parent?.mereNomFr || "",
       mereDateNaissance: parent?.mereDateNaissance || "",
       mereCin: parent?.mereCin || "",
       mereSante: (parent?.mereSante || "سليم") as HealthStatus,
@@ -970,7 +1097,15 @@ function ParentDialog({
     >
       <form
         onSubmit={handleSubmit((data) => {
-          onSave({ ...data, familyId, id: parent?.id, perePhoto, merePhoto });
+          onSave({
+            ...data,
+            familyId,
+            id: parent?.id,
+            perePhoto,
+            merePhoto,
+            pereNomFr: data.pereNomFr || undefined,
+            mereNomFr: data.mereNomFr || undefined,
+          });
         })}
         className="space-y-4"
       >
@@ -985,16 +1120,28 @@ function ParentDialog({
           </div>
         </div>
 
-        <h3 className="font-semibold text-emerald-700 dark:text-emerald-400">الأب (المتوفى)</h3>
-        <div className="grid md:grid-cols-3 gap-4">
+        <h3 className="font-semibold text-emerald-700 dark:text-emerald-400">الأب (المتوفى) / Père</h3>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Input label="اسم الأب *" {...register("pereNom", { required: true })} />
+          <Input
+            label="Nom du père (FR)"
+            dir="ltr"
+            placeholder="Latin / Français"
+            {...register("pereNomFr")}
+          />
           <Input label="تاريخ الازدياد" type="date" {...register("pereDateNaissance")} />
           <Input label="تاريخ الوفاة *" type="date" {...register("pereDateDeces", { required: true })} />
         </div>
 
-        <h3 className="font-semibold text-sky-700 dark:text-sky-400 mt-4">الأم (الأرملة)</h3>
-        <div className="grid md:grid-cols-3 gap-4">
+        <h3 className="font-semibold text-sky-700 dark:text-sky-400 mt-4">الأم (الأرملة) / Mère</h3>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Input label="اسم الأم *" {...register("mereNom", { required: true })} />
+          <Input
+            label="Nom de la mère (FR)"
+            dir="ltr"
+            placeholder="Latin / Français"
+            {...register("mereNomFr")}
+          />
           <Input label="تاريخ الازدياد" type="date" {...register("mereDateNaissance")} />
           <Input label="رقم البطاقة الوطنية" {...register("mereCin")} />
           <Select label="الحالة الصحية" {...register("mereSante")}>

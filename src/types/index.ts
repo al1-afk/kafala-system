@@ -20,9 +20,11 @@ export type KafalaType = "شهرية" | "عامة" | "حماية القاصر";
 
 export interface Responsable {
   fullName: string;
+  fullNameFr?: string;
   natureResponsable: ResponsibleNature | "";
   cin: string;
   address: string;
+  addressFr?: string;
   phone: string;
   photo?: string;
 }
@@ -31,10 +33,12 @@ export interface Parent {
   id: string;
   familyId: string;
   pereNom: string;
+  pereNomFr?: string;
   pereDateNaissance: string;
   pereDateDeces: string;
   perePhoto?: string;
   mereNom: string;
+  mereNomFr?: string;
   mereDateNaissance: string;
   mereCin: string;
   mereSante: HealthStatus | "";
@@ -47,12 +51,18 @@ export interface Orphan {
   id: string;
   familyId: string;
   nomFamille: string;
+  nomFamilleFr?: string;
   prenom: string;
+  prenomFr?: string;
   sexe: Sex;
   dateNaissance: string;
   lieuNaissance: string;
   health: HealthStatus;
   photo?: string;
+  adresse?: string;
+  adresseFr?: string;
+  etablissement?: string;
+  etablissementFr?: string;
 }
 
 export interface Schooling {
@@ -115,6 +125,7 @@ export interface Family {
   statut: FamilyStatus;
   natureDossier: FamilyNature;
   nomFamille: string;
+  nomFamilleFr?: string;
   responsable: Responsable;
   notes: string;
   pointMoctab: number;
