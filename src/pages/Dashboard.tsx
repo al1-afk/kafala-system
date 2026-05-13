@@ -179,7 +179,9 @@ export default function Dashboard() {
               />
             </div>
             <div>
-              <p className="text-orange-300 text-xs font-bold tracking-widest uppercase mb-1">جمعية بسمة للتنمية البشرية</p>
+              <p className="text-orange-300 text-xs font-bold tracking-wider mb-1">
+                جمعية بسمة للتنمية البشرية، كفالة ورعاية اليتيم
+              </p>
               <h1 className="text-3xl lg:text-4xl font-extrabold leading-tight text-white" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.25)" }}>
                 لوحة القيادة
               </h1>

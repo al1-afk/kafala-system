@@ -27,7 +27,7 @@ export default function Login() {
     const res = login(data.username.trim(), data.password);
     setLoading(false);
     if (res.ok) {
-      toast.success("مرحبا بك في نظام الكفالة");
+      toast.success("مرحبا بك في جمعية بسمة للتنمية البشرية");
       navigate("/", { replace: true });
     } else {
       toast.error(res.error || "خطأ في تسجيل الدخول");
@@ -95,7 +95,7 @@ export default function Login() {
             <div className="relative flex items-center justify-center gap-2 mt-2.5">
               <span className="h-px w-8 bg-white/40"></span>
               <p className="text-white/95 text-[11px] font-medium">
-                كفالة ورعاية اليتيم - الكردان الكبير
+                كفالة ورعاية اليتيم
               </p>
               <span className="h-px w-8 bg-white/40"></span>
             </div>

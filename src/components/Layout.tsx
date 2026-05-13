@@ -248,9 +248,9 @@ export function Layout() {
               className="h-6 w-auto object-contain opacity-70"
             />
             <span>
-              <strong className="text-brand-700 dark:text-brand-300">جمعية بسمة للتنمية البشرية</strong>
-              <span className="mx-1.5">·</span>
-              كفالة ورعاية اليتيم - الكردان الكبير
+              <strong style={{ color: "#0e6e37" }}>جمعية بسمة للتنمية البشرية</strong>
+              <span className="mx-1.5">،</span>
+              كفالة ورعاية اليتيم
               <span className="mx-1.5">·</span>
               © {new Date().getFullYear()}
             </span>
